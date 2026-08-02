@@ -1,0 +1,9 @@
+# Maven build folder
+target/
+
+# VS Code workspace files
+.vscode/
+
+# OS specific files
+.DS_Store
+Thumbs.db

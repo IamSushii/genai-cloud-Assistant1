@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlowUp Assistant ✨</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font: Quicksand for a softer, rounder feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Apply font globally */
+        body {
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        /* Custom Scrollbar Styling to match the pink theme */
+        #chat-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        #chat-container::-webkit-scrollbar-track {
+            background: #171717; /* neutral-950 */
+        }
+        #chat-container::-webkit-scrollbar-thumb {
+            background: #db2777; /* fuchsia-600 */
+            border-radius: 10px;
+        }
+        #chat-container::-webkit-scrollbar-thumb:hover {
+            background: #be185d; /* fuchsia-700 */
+        }
+
+        /* Soft glow effect on messages */
+        .ai-bubble {
+            box-shadow: 0 4px 14px rgba(219, 39, 119, 0.15); /* Subtle pink glow */
+        }
+    </style>
+</head>
+<body class="bg-neutral-950 text-neutral-200 h-screen flex flex-col justify-between">
+
+    <!-- Header: Chic pink gradient border -->
+    <header class="bg-neutral-900 border-b-2 border-fuchsia-600 p-4 text-center font-extrabold text-2xl text-pink-400 shadow-lg">
+        GlowUp AI Assistant <span class="text-pink-300">✨</span>
+    </header>
+
+    <!-- Chat Container: Dark base with pink accents -->
+    <main id="chat-container" class="flex-1 overflow-y-auto p-6 space-y-6 max-w-4xl w-full mx-auto bg-black rounded-t-2xl mt-4">
+        
+        <!-- Welcome Message (AI) -->
+        <div class="flex items-start space-x-4">
+            <!-- Cute Sparkle Avatar -->
+            <div class="bg-fuchsia-900 text-pink-200 rounded-full h-10 w-10 flex items-center justify-center font-extrabold text-lg border-2 border-pink-400 shadow-inner">
+                ✨
+            </div>
+            <!-- Speech Bubble with Glow -->
+            <div class="ai-bubble bg-neutral-800 border border-neutral-700 p-5 rounded-br-3xl rounded-l-3xl max-w-xl text-base text-pink-200 leading-relaxed">
+                Hello, gorgeous! I'm your personal AI style and productivity assistant. What can we create or achieve today?
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Input Footer: Dark with pink focus ring -->
+    <footer class="bg-neutral-900 border-t border-neutral-800 p-6 rounded-b-2xl shadow-inner">
+        <form id="chat-form" class="max-w-4xl mx-auto flex gap-3" onsubmit="sendMessage(event)">
+            <input type="text" id="prompt-input" placeholder="Ask me anything, darling..." required 
+                class="flex-1 bg-neutral-800 border border-neutral-700 rounded-full px-6 py-3 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-600 text-base text-pink-100 placeholder-neutral-500">
+            
+            <!-- Send Button: Bold Pink Gradient -->
+            <button type="submit" class="bg-gradient-to-r from-pink-500 to-fuchsia-600 hover:from-pink-600 hover:to-fuchsia-700 text-white px-8 py-3 rounded-full text-base font-bold transition shadow-md hover:shadow-xl active:scale-95">
+                Send
+            </button>
+        </form>
+        <div class="text-xs text-neutral-700 text-center mt-4">Designed with love by SUSHI 🎀</div>
+    </footer>
+
+    <script>
+        // Keep your existing JavaScript logic here. 
+        // Just ensure you append messages to the new #chat-container.
+        async function sendMessage(event) {
+            event.preventDefault();
+            const inputField = document.getElementById('prompt-input');
+            const container = document.getElementById('chat-container');
+            const userText = inputField.value;
+            inputField.value = '';
+
+            // Append User Message (Right-aligned, pink bubble)
+            container.innerHTML += `
+                <div class='flex items-end justify-end space-x-4'>
+                    <div class='bg-gradient-to-r from-pink-600 to-fuchsia-600 p-5 rounded-bl-3xl rounded-r-3xl max-w-xl text-base text-white leading-relaxed shadow-lg'>
+                        ${userText}
+                    </div>
+                     <div class='bg-neutral-900 text-pink-300 rounded-full h-10 w-10 flex items-center justify-center font-bold text-lg border-2 border-pink-600'>
+                        ME
+                    </div>
+                </div>`;
+            container.scrollTop = container.scrollHeight;
+
+            try {
+                // Fetch response from Java Backend (replace with your actual endpoint)
+                const response = await fetch(`http://localhost:8080/api/chat?prompt=${encodeURIComponent(userText)}`);
+                const data = await response.text();
+
+                // Append AI Response (Left-aligned, dark bubble, sparkle avatar)
+                container.innerHTML += `
+                    <div class='flex items-start space-x-4'>
+                        <div class='bg-fuchsia-900 text-pink-200 rounded-full h-10 w-10 flex items-center justify-center font-extrabold text-lg border-2 border-pink-400 shadow-inner'>
+                            ✨
+                        </div>
+                        <div class='ai-bubble bg-neutral-800 border border-neutral-700 p-5 rounded-br-3xl rounded-l-3xl max-w-xl text-base text-pink-200 leading-relaxed'>
+                            ${data}
+                        </div>
+                    </div>`;
+                container.scrollTop = container.scrollHeight;
+            } catch (error) {
+                console.error('Error:', error);
+                 container.innerHTML += `
+                    <div class='flex items-start space-x-4'>
+                        <div class='bg-red-900 text-red-200 rounded-full h-10 w-10 flex items-center justify-center font-bold text-lg border-2 border-red-500'>
+                            !
+                        </div>
+                        <div class='bg-red-950 border border-red-800 p-5 rounded-br-3xl rounded-l-3xl max-w-xl text-base text-red-200 leading-relaxed'>
+                            Oops, looks like something went wrong. Try again, sweetness!
+                        </div>
+                    </div>`;
+            }
+        }
+    </script>
+</body>
+</html>
