@@ -100,7 +100,7 @@
 
             try {
                 // Fetch response from Java Backend (replace with your actual endpoint)
-                const response = await fetch(`http://localhost:8080/api/chat?prompt=${encodeURIComponent(userText)}`);
+                const response = await fetch(`https://genai-cloud-assistant1.onrender.com/api/chat?prompt=${encodeURIComponent(userText)}`);
                 const data = await response.text();
 
                 // Append AI Response (Left-aligned, dark bubble, sparkle avatar)
